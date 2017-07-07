@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# quick starter
+#   1. put this into ~/bin/
+#   2. change USERNAME and PASSWORD
+#   3. check your $PATH
+#  
+export MINISHIFT_USERNAME="RHNUSER"
+export MINISHIFT_PASSWORD="RHNPASS"
+
+~/git/cdk-labs/lab.sh
