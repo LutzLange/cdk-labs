@@ -1,0 +1,16 @@
+# Name: registry-console
+# Description: Install Registry Console 
+
+# create route for docker registry
+oc expose service docker-registry -n default
+
+# load registry-console template
+oc create -n default -f https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/openshift_hosted_templates/files/v1.5/origin/registry-console.yaml
+
+# create passthrough route for registry-console
+oc create route passthrough --service registry-console --port registry-console -n default
+
+# create the registry-console
+oc new-app -n default --template=registry-console -p OPENSHIFT_OAUTH_PROVIDER_URL=https://#{ip}:8443 -p REGISTRY_HOST=docker-registry-default.#{ip}.nip.io -p COCKPIT_KUBE_URL=https://registry-console-default.#{ip}.nip.io 
+
+

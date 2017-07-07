@@ -1,0 +1,25 @@
+# Name: cfme 
+# Description: Install latest CloudForms 
+#
+oc new-project cloudforms --description="CloudForms Project" --display-name="CloudForms" 
+oc adm policy add-scc-to-user privileged system:serviceaccount:cloudforms:default
+pwd
+oc create -f templates/cfme-template.yaml -n cloudforms
+
+# cdk openshift config set --patch '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
+
+# oc process --parameters -n cloudforms cloudforms
+
+#
+#APPLICATION_CPU_REQ           Minimum amount of CPU time the Application container will need (expressed in millicores).                                       1000m
+#POSTGRESQL_CPU_REQ            Minimum amount of CPU time the PostgreSQL container will need (expressed in millicores).                                        500m
+#MEMCACHED_CPU_REQ             Minimum amount of CPU time the Memcached container will need (expressed in millicores).                                         200m
+#ANSIBLE_CPU_REQ               Minimum amount of CPU time the Ansible container will need (expressed in millicores).                                           1000m
+#APPLICATION_MEM_REQ           Minimum amount of memory the Application container will need.                                                                   6144Mi
+#POSTGRESQL_MEM_REQ            Minimum amount of memory the PostgreSQL container will need.                                                                    1024Mi
+#MEMCACHED_MEM_REQ             Minimum amount of memory the Memcached container will need.                                                                     64Mi
+#ANSIBLE_MEM_REQ               Minimum amount of memory the Ansible container will need.                                                                       2048Mi
+#HTTPD_CPU_REQ                 Minimum amount of CPU time the httpd container will need (expressed in millicores).                                             500m
+#HTTPD_MEM_REQ                 Minimum amount of memory the httpd container will need.                                                                         512Mi
+
+# oc new-app --template=cloudforms -p APPLICATION_CPU_REQ=200m -p POSTGRESQL_CPU_REQ=100m -p MEMCACHED_CPU_REQ=50m -p APPLICATION_MEM_REQ=1024Mi -p POSTGRESQL_MEM_REQ=250Mi -n cloudforms 
