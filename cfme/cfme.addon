@@ -1,13 +1,54 @@
 # Name: cfme 
 # Description: Install latest CloudForms 
 #
-oc new-project cloudforms --description="CloudForms Project" --display-name="CloudForms" 
+
+# Login
+oc login -u system:admin
+
+# Create Basic Roles for CloudForms to be able to Connect OpenShift
+oc adm new-project management-infra --description="Management-Infrastructure"
+oc create serviceaccount management-admin -n management-infra
+oc create serviceaccount inspector-admin -n management-infra
+oc create -f management-infra-admin-cluster-role.json
+oc create -f hawkular-metrics-admin-cluster-role.json
+oc policy add-role-to-user -n management-infra admin -z management-admin
+oc policy add-role-to-user -n management-infra management-infra-admin -z management-admin
+oc adm policy add-cluster-role-to-user cluster-reader system:serviceaccount:management-infra:management-admin
+oc adm policy add-scc-to-user privileged system:serviceaccount:management-infra:management-admin
+oc adm policy add-cluster-role-to-user system:image-puller system:serviceaccount:management-infra:inspector-admin
+oc adm policy add-scc-to-user privileged system:serviceaccount:management-infra:inspector-admin
+oc adm policy add-cluster-role-to-user self-provisioner system:serviceaccount:management-infra:management-admin
+oc adm policy add-cluster-role-to-user hawkular-metrics-admin system:serviceaccount:management-infra:management-admin
+
+# Create CloudForms Project
+oc new-project cloudforms --description=CloudForms --display-name=CloudForms 
 oc adm policy add-scc-to-user privileged system:serviceaccount:cloudforms:default
-pwd
-oc create -f templates/cfme-template.yaml -n cloudforms
 
-# cdk openshift config set --patch '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
+# Create template
+oc create -f https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/openshift_examples/files/examples/v3.6/cfme-templates/cfme-template.yaml -n cloudforms
 
+#oc config set --patch '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
+docker exec origin /usr/bin/openshift ex config patch /var/lib/origin/openshift.local.config/master/master-config.yaml -p '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
+
+# restart origin to read in config change
+# docker restart origin
+
+# pre pull images
+#   fails often for me
+#   prepull provide as tar on host
+#   mount as nfs
+#   # minishift default is missing nfs : yum install nfs-utils -y
+#   # hitting https://github.com/moby/moby/issues/27381
+#   --> check Mount Flags and defered deletion
+#
+#for IMG in $(curl https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/openshift_examples/files/examples/v3.6/cfme-templates/cfme-template.yaml | grep registry.access.red | awk '{ print $2 }' | sed 's/"//g' ); do docker pull $IMG; done;
+
+## Prepull
+#docker pull registry.access.redhat.com/cloudforms45/cfme-openshift-postgresql
+#docker pull registry.access.redhat.com/cloudforms45/cfme-openshift-memcached
+#docker pull registry.access.redhat.com/cloudforms45/cfme-openshift-app
+
+## Check on available parameters
 # oc process --parameters -n cloudforms cloudforms
 
 #
@@ -22,4 +63,5 @@ oc create -f templates/cfme-template.yaml -n cloudforms
 #HTTPD_CPU_REQ                 Minimum amount of CPU time the httpd container will need (expressed in millicores).                                             500m
 #HTTPD_MEM_REQ                 Minimum amount of memory the httpd container will need.                                                                         512Mi
 
-# oc new-app --template=cloudforms -p APPLICATION_CPU_REQ=200m -p POSTGRESQL_CPU_REQ=100m -p MEMCACHED_CPU_REQ=50m -p APPLICATION_MEM_REQ=1024Mi -p POSTGRESQL_MEM_REQ=250Mi -n cloudforms 
+# fire up CloudForms 4.5
+oc new-app --template=cloudforms -p APPLICATION_CPU_REQ=400m -p POSTGRESQL_CPU_REQ=200m -p MEMCACHED_CPU_REQ=100m -p APPLICATION_MEM_REQ=2048Mi -p POSTGRESQL_MEM_REQ=500Mi -n cloudforms 
