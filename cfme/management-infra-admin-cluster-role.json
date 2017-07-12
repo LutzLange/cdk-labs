@@ -1,0 +1,10 @@
+{
+  "apiVersion": "v1",
+  "kind":       "ClusterRole",
+  "metadata": {
+    "name": "management-infra-admin"
+  },
+  "rules": [
+    {"resources": ["pods/proxy"],"verbs":["*"]}
+  ]
+}
