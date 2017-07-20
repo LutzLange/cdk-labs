@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# do it again
+# After setting up the Red Hat Container Development Kit (CDK), create a symlink 'cdk' to it.
 #
 
 time { 
@@ -12,6 +12,10 @@ time {
 
   # empty out minishift config dir
   test -d ~/.minishift && rm -rf ~/.minishift
+
+  # set minimum requirements for VM
+  cdk config set cpu 7
+  cdk config set memory 12288
 
   # run new setup ( config dir and tools )
   cdk setup-cdk
