@@ -5,7 +5,7 @@
 #
 
 cat <<ENDMESSAGE
-You are running the OpenShift CDK Lab Installer for MacOS.
+You are running the OpenShift CDK Lab Installer for MacOS. The following actions will be taken :
 
 1. Install XCode Developer Toolset for git usage
 2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs
@@ -19,7 +19,7 @@ You will need to enter your password for prviledge actions.
 ENDMESSAGE
 
 read -p "Do you want to proceed ? (Y/N)" ANSWER
-test $ANSWER != Y && { echo "Found $ANSWER installation averted"; exit 1 ; }
+test $ANSWER != Y && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
 
 STEP=0
 
