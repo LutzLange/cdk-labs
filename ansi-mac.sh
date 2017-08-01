@@ -43,7 +43,7 @@ sudo /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license acce
 # Clone / update the repo
 echo "2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
 test -d ~/git && echo "~/git is already therer" || mkdir ~/git
-if test -d ~/git/cdk-labs then
+if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
        cd ~/git; git pull
        cd
