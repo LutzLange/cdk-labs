@@ -61,7 +61,7 @@ test -d ~/bin && echo "~/bin was there already" || mkdir ~/bin
 # Get CDK (ToDo official CDK when released) 
 # get this every time
 echo "4. Getting latest CDK - this can be a slow Download of ~400MB"
-curl http://people.redhat.com/~llange/cdkmac -O ~/bin/cdk
+curl http://sademo.de/cdkmac -O ~/bin/cdk
 
 # Install homebrew
 echo "5. Checking / Installing homebrew"
