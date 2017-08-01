@@ -14,3 +14,10 @@ pip &>/dev/null || sudo easy_install pip
 
 # install ansible
 ansible --version &>/dev/null || sudo pip install ansible
+
+# Clone the repo
+test -d ~/git || mkdir ~/git
+cd ~/git
+git clone https://github.com/LutzLange/cdk-labs.git
+
+
