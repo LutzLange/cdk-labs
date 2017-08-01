@@ -10,10 +10,11 @@ You are running the OpenShift CDK Lab Installer for MacOS. The following actions
 1. Install XCode Developer Toolset for git usage
 2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs
 3. Create ~/bin and extend your PATH to include ~/bin
-4. Get the latest CDK ( currently nightly buids for 3.1 ) and put it in ~/bin
-5. Install Homebrew
-6. Install docker-machine-driver-xhyve
-7. Install olab command in ~/bin
+4. Install Homebrew
+5. Install wget
+6. Get the latest CDK ( currently nightly buids for 3.1 ) and put it in ~/bin
+7. Install docker-machine-driver-xhyve
+8. Install olab command in ~/bin
 
 You will need to enter your password for prviledge actions.
 
@@ -25,7 +26,7 @@ test $ANSWER != Y && { echo "Found \"$ANSWER\" expecting \"Y\" installation aver
 STEP=0
 
 # kick off install of CMDLine dev tools
-echo "1. Installing XCode Developer Toolset" 
+echo -e "\n1. Installing XCode Developer Toolset" 
 sudo xcode-select --install
 
 # Accept License agreement for xcode
@@ -41,7 +42,7 @@ sudo /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license acce
 #ansible --version &>/dev/null || sudo pip install ansible
 
 # Clone / update the repo
-echo "2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
+echo -e "\n2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
 test -d ~/git && echo "~/git is already therer" || mkdir ~/git
 if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
@@ -52,27 +53,32 @@ else
 fi
 
 # Create bin folder
-echo "3. Create ~/bin and extend your PATH to include ~/bin"
+echo -e "\n3. Create ~/bin and extend your PATH to include ~/bin"
 test -d ~/bin && echo "~/bin was there already" || mkdir ~/bin
 
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo ‘export PATH=$PATH:$HOME/bin’ >> ~/.bash_profile
 
-# Get CDK (ToDo official CDK when released) 
-# get this every time
-echo "4. Getting latest CDK - this can be a slow Download of ~400MB"
-curl http://sademo.de/cdkmac -O ~/bin/cdk
-
 # Install homebrew
-echo "5. Checking / Installing homebrew"
+echo -e "\n4. Checking / Installing homebrew"
 brew --version &>/dev/null && echo "homebrew was installed" || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
+# Installing wget
+echo -e "\n5. Installing wget"
+brew list wget &>/dev/null || brew install wget
+
+# Get CDK (ToDo official CDK when released) 
+# get this every time
+echo -e "\n6. Getting latest CDK - this can be a slow Download of ~400MB"
+wget http://sademo.de/cdkmac -O ~/bin/cdk
+
+
 # Install docker-machine-driver-xhyve
-echo "6. Installing docker-machine-driver-xhyve"
+echo -e "\n7. Installing docker-machine-driver-xhyve"
 brew list docker-machine-driver-xhyve &>/dev/null && echo "xhyve was installed" || brew install docker-machine-driver-xhyve
 
 # Install the olab Command in ~/bin
-echo "7. Installing olab Script"
+echo -e "\n8. Installing olab Script"
 cp ~/git/cdk-labs/olab ~/bin
 
 # You are ready to roll now
