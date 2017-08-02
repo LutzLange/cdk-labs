@@ -14,11 +14,11 @@ You are running the OpenShift CDK Lab Installer for MacOS. The following actions
 3. Create ~/bin and extend your PATH to include ~/bin
 4. Install Homebrew
 5. Install wget
-6. Get the latest CDK ( currently nightly buids for 3.1 ) and put it in ~/bin
+6. Get the latest CDK ( currently nightly builds for cdk-3.1 ) and put it in ~/bin
 7. Install docker-machine-driver-xhyve
 8. Install olab command in ~/bin
 
-You will need to enter your password for prviledge actions.
+You will need to enter your password for prviledged actions.
 
 ENDMESSAGE
 
@@ -63,17 +63,16 @@ test -d ~/bin && echo "~/bin was there already" || mkdir ~/bin
 
 # Install homebrew
 echo -e "\n4. Checking / Installing homebrew"
-brew --version &>/dev/null && echo "homebrew was installed" || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew --version &>/dev/null && echo "homebrew already installed" || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 # Installing wget
 echo -e "\n5. Installing wget"
-brew list wget &>/dev/null || brew install wget
+brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 
 # Get CDK (ToDo official CDK when released) 
 # get this every time
-echo -e "\n6. Getting latest CDK - this can be a slow Download of ~400MB"
-wget http://sademo.de/cdkmac -O ~/bin/cdk
-
+echo -e "\n6. Getting latest CDK - this can be a slow download of ~400MB"
+while ! wget --continue http://sademo.de/cdkmac -O ~/bin/cdk; do sleep 10; done
 
 # Install docker-machine-driver-xhyve
 echo -e "\n7. Installing docker-machine-driver-xhyve"
@@ -91,9 +90,9 @@ You will have all the necessary tools installed now.
 
 ${bold}Next steps :${normal}
 
-1. Check your environment with : $ cdk version
-2. CHANGE your USER and PASSWORD in ~/bin/olab
-3. Build or reset your lab environment with : $ olab 
+${bold}1.${normal} Check your environment with : $ cdk version
+${bold}2.${normal} CHANGE your USER and PASSWORD in ~/bin/olab
+${bold}3.${normal} Build or reset your lab environment with : $ olab 
 
 NOTES : 
  fast internet connection to download docker images required
