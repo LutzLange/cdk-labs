@@ -72,9 +72,7 @@ brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 # Get CDK (ToDo official CDK when released) 
 # get this every time
 echo -e "\n6. Getting latest CDK - this can be a slow download of ~400MB"
-cd ~/bin
-wget -r --tries=15 --continue http://sademo.de/mac/cdk
-cd
+wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin http://sademo.de/mac/cdk
 
 # Install docker-machine-driver-xhyve
 echo -e "\n7. Installing docker-machine-driver-xhyve"
