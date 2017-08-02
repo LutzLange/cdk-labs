@@ -48,7 +48,7 @@ echo -e "\n2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
 test -d ~/git && echo "~/git is already there" || mkdir ~/git
 if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
-       cd ~/git; git pull
+       cd ~/git/cdk-labs; git pull
        cd
 else
        cd ~/git; git clone https://github.com/LutzLange/cdk-labs.git
