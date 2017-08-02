@@ -3,6 +3,8 @@
 # test Lab Setup with ansible an Mac OS
 #  Convert to Ansible?
 #
+bold=$(tput bold)
+normal=$(tput sgr0)
 
 cat <<ENDMESSAGE
 You are running the OpenShift CDK Lab Installer for MacOS. The following actions will be taken :
@@ -43,7 +45,7 @@ sudo /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license acce
 
 # Clone / update the repo
 echo -e "\n2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
-test -d ~/git && echo "~/git is already therer" || mkdir ~/git
+test -d ~/git && echo "~/git is already there" || mkdir ~/git
 if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
        cd ~/git; git pull
@@ -87,11 +89,17 @@ cat <<ENDMESSAGE
 You are ready to check your environment and start the OpenShift environment.
 You will have all the necessary tools installed now. 
 
-Check your environment with : $ cdk version
-Build or reset your lab environment with : $ olab
+${bold}Next steps :${normal}
 
-NOTE : you will need a fast internet connection to download docker images
-NOTE2 : 16GB RAM are currently required 
+1. Check your environment with : $ cdk version
+2. CHANGE your USER and PASSWORD in ~/bin/olab
+3. Build or reset your lab environment with : $ olab 
+
+NOTES : 
+ fast internet connection to download docker images required
+ 16 GB RAM recommended ( tuning required if you have less )
+
+
 ENDMESSAGE
 
 
