@@ -59,7 +59,7 @@ echo -e "\n3. Create ~/bin and extend your PATH to include ~/bin"
 test -d ~/bin && echo "~/bin was there already" || mkdir ~/bin
 
 # extend PATH if required
-{ echo $PATH | grep -q $HOME/bin; } || echo ‘export PATH=$PATH:$HOME/bin’ >> ~/.bash_profile
+{ echo $PATH | grep -q $HOME/bin; } || echo 'export PATH=$PATH:$HOME/bin' >> ~/.bash_profile
 
 # Install homebrew
 echo -e "\n4. Checking / Installing homebrew"
@@ -89,13 +89,12 @@ You are ready to check your environment and start the OpenShift environment.
 You will have all the necessary tools installed now. 
 
 ${bold}Next steps :${normal}
-
 ${bold}1.${normal} Check your environment with : $ cdk version
 ${bold}2.${normal} CHANGE your USER and PASSWORD in ~/bin/olab
 ${bold}3.${normal} Build or reset your lab environment with : $ olab 
 
 NOTES : 
- fast internet connection to download docker images required
+ fast internet connection to download docker images highly recommended
  16 GB RAM recommended ( tuning required if you have less )
 
 
