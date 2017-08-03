@@ -5,7 +5,7 @@
 
 time { 
   # stop running TODO check before this
-  cdk stop 
+  cdk stop --skip-unregistration
 
   # delete minishift vm
   cdk delete
@@ -19,8 +19,8 @@ time {
   # install addons and set vm options
   ~/git/cdk-labs/pre-start-script.sh
 
-  # start the new vm with all options TODO change registration to use VARS
-  cdk start --metrics --ocp-tag=v3.5 
+  # start the new vm with all options 
+  cdk start --metrics --ocp-tag=v3.5 --skip-registration
 
   # do things that are needed post start ( adjust master-config.yaml )
   ~/git/cdk-labs/post-start-script.sh
