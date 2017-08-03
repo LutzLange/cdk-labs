@@ -77,6 +77,7 @@ brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 echo -e "\n6. Getting latest CDK - this can be a slow download of ~400MB"
 wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/mac/minishift
 test -l ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
+chmod +x ~/bin/cdk
 
 # Install docker-machine-driver-xhyve
 echo -e "\n7. Installing docker-machine-driver-xhyve"
