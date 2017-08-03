@@ -19,7 +19,7 @@ intro () {
 
 	EMSG
 	read -p "Are you sure to continue? (Y/N) : " ANSWER  
-	test $ANSWER != Y && { echo "Found \"$ANSWER\" expecting \"Y\" Aborting Procedure now"; exit 1 ; }
+	test "$ANSWER " != "Y " && { echo "Found \"$ANSWER\" expecting \"Y\" Aborting Procedure now"; exit 1 ; }
 
 }
 
