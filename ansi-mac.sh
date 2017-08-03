@@ -23,7 +23,7 @@ You will need to enter your password for prviledged actions.
 ENDMESSAGE
 
 read -p "Do you want to proceed ? (Y/N)" ANSWER
-test $ANSWER != Y && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
+test "$ANSWER" != Y && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
 
 STEP=0
 
@@ -95,8 +95,7 @@ You will have all the necessary tools installed now.
 
 ${bold}Next steps :${normal}
 ${bold}1.${normal} Check your environment with : $ cdk version
-${bold}2.${normal} CHANGE your USER and PASSWORD in ~/bin/olab
-${bold}3.${normal} Build or reset your lab environment with : $ olab 
+${bold}2.${normal} Build or reset your lab environment with : $ olab 
 
 NOTES : 
  fast internet connection to download docker images highly recommended
