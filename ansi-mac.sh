@@ -28,7 +28,7 @@ test $ANSWER != Y && { echo "Found \"$ANSWER\" expecting \"Y\" installation aver
 STEP=0
 
 # kick off install of CMDLine dev tools
-echo -e "\n1. Installing XCode Developer Toolset" 
+echo -e "\n${bold}1. Installing XCode Developer Toolset" 
 sudo xcode-select --install
 
 # Accept License agreement for xcode
@@ -44,7 +44,7 @@ sudo /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license acce
 #ansible --version &>/dev/null || sudo pip install ansible
 
 # Clone / update the repo
-echo -e "\n2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
+echo -e "\n${bold}2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
 test -d ~/git && echo "~/git is already there" || mkdir ~/git
 if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
@@ -55,18 +55,18 @@ else
 fi
 
 # Create bin folder
-echo -e "\n3. Create ~/bin and extend your PATH to include ~/bin"
+echo -e "\n${bold}3. Create ~/bin/cdkshift and extend your PATH to include ~/bin"
 test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/bin/cdkshift
 
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo 'export PATH=$PATH:$HOME/bin' >> ~/.bash_profile
 
 # Install homebrew
-echo -e "\n4. Checking / Installing homebrew"
+echo -e "\n${bold}4. Checking / Installing homebrew"
 brew --version &>/dev/null && echo "homebrew already installed" || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 # Installing wget
-echo -e "\n5. Installing wget"
+echo -e "\n{$bold}5. Installing wget"
 brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 
 # Get CDK (ToDo official CDK when released) 
@@ -74,17 +74,17 @@ brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 # - only transfer if newer
 # - link to cdk to preserve existing minishift
 #
-echo -e "\n6. Getting latest CDK - this can be a slow download of ~400MB"
+echo -e "\n${bold}6. Getting latest CDK - this can be a slow download of ~400MB"
 wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/mac/minishift
 test -l ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
 chmod +x ~/bin/cdk
 
 # Install docker-machine-driver-xhyve
-echo -e "\n7. Installing docker-machine-driver-xhyve"
+echo -e "\n${bold}7. Installing docker-machine-driver-xhyve"
 brew list docker-machine-driver-xhyve &>/dev/null && echo "xhyve was installed" || brew install docker-machine-driver-xhyve
 
 # Install the olab Command in ~/bin
-echo -e "\n8. Installing olab Script"
+echo -e "\n${bold}8. Installing olab Script"
 cp ~/git/cdk-labs/olab ~/bin
 
 # You are ready to roll now
