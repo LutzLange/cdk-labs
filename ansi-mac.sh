@@ -56,7 +56,7 @@ fi
 
 # Create bin folder
 echo -e "\n3. Create ~/bin and extend your PATH to include ~/bin"
-test -d ~/bin && echo "~/bin was there already" || mkdir ~/bin
+test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/bin/cdkshift
 
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo 'export PATH=$PATH:$HOME/bin' >> ~/.bash_profile
@@ -71,8 +71,12 @@ brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 
 # Get CDK (ToDo official CDK when released) 
 # get this every time
+# - only transfer if newer
+# - link to cdk to preserve existing minishift
+#
 echo -e "\n6. Getting latest CDK - this can be a slow download of ~400MB"
-wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin http://sademo.de/mac/cdk
+wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/mac/minishift
+test -l ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
 
 # Install docker-machine-driver-xhyve
 echo -e "\n7. Installing docker-machine-driver-xhyve"
@@ -96,7 +100,6 @@ ${bold}3.${normal} Build or reset your lab environment with : $ olab
 NOTES : 
  fast internet connection to download docker images highly recommended
  16 GB RAM recommended ( tuning required if you have less )
-
 
 ENDMESSAGE
 
