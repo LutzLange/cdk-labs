@@ -2,7 +2,7 @@
 # Enable add ons and prefill minishift cache
 # 
 ADDONS="registry-console cfme"
-IMARCH="/nfsdata/cdk3-cache.tar"
+#IMARCH="/nfsdata/cdk-cache.tar"
 
 cd ~/git/cdk-labs/
 
@@ -17,5 +17,5 @@ do
 done	
 
 # pre fill cache - is not picked up by nightly cdk 12-July-17
-# tar xvf $IMARCH -C $HOME
+#tar xvf $IMARCH -C $HOME
 
