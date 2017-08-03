@@ -104,6 +104,7 @@ test -f ~/bin/olab && echo olab already there skipping copy || cp ~/git/cdk-labs
 # You are ready to roll now
 cat <<ENDMESSAGE
 
+----------------------------------------------------------------------------
 You are ready to check your environment and start the OpenShift environment.
 You will have all the necessary tools installed now. 
 
