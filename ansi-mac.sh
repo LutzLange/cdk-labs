@@ -80,7 +80,7 @@ test -d '/Applications/Google Chrome.app' && { echo found Google Chrome skipping
 }
 
 # Installing wget
-echo -e "\n{$bold}6. Installing wget${normal}"
+echo -e "\n${bold}6. Installing wget${normal}"
 brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 
 # Get CDK (ToDo official CDK when released) 
@@ -90,7 +90,7 @@ brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 #
 echo -e "\n${bold}7. Getting latest CDK - this can be a slow download of ~400MB${normal}"
 wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/mac/minishift
-test -l ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
+test -L ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
 chmod +x ~/bin/cdk
 
 # Install docker-machine-driver-xhyve
