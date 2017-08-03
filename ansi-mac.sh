@@ -24,7 +24,7 @@ You will need to enter your password for prviledged actions.
 ENDMESSAGE
 
 read -p "Do you want to proceed ? (Y/N)" ANSWER
-test "$ANSWER" != Y && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
+test "$ANSWER " != "Y " && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
 
 STEP=0
 
