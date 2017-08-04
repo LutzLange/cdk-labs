@@ -22,7 +22,9 @@ while ! oc get pod cloudforms-0 -o yaml | grep -q "ready: true" ; do oc get pod 
 # configure provider in CF
 
 # get token
-TOKEN=$(oc get -n management-infra secrets $(oc get -n management-infra sa/management-admin --template='{{range .secrets}}{{printf "%s\n" .name}}{{end}}' | grep management-admin-token) --template='{{.data.token}}' | base64 -d)
+#   # base64 -d not working on mac
+# TOKEN=$(oc get -n management-infra secrets $(oc get -n management-infra sa/management-admin --template='{{range .secrets}}{{printf "%s\n" .name}}{{end}}' | grep management-admin-token) --template='{{.data.token}}' | base64 -d)
+
 
 # get masterURL / IP
 
