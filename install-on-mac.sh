@@ -96,6 +96,8 @@ chmod +x ~/bin/cdk
 # Install docker-machine-driver-xhyve
 echo -e "\n${bold}8. Installing docker-machine-driver-xhyve${normal}"
 brew list docker-machine-driver-xhyve &>/dev/null && echo "xhyve was installed" || brew install docker-machine-driver-xhyve
+sudo chown root:wheel /usr/local/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
+sudo chmod u+s /usr/local/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
 
 # Install the olab Command in ~/bin
 echo -e "\n${bold}9. Installing olab Script${normal}"
