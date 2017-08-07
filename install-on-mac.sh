@@ -58,7 +58,7 @@ echo -e "\n${bold}3. Create ~/bin/cdkshift and extend your PATH to include ~/bin
 test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/bin/cdkshift
 
 # extend PATH if required
-{ echo $PATH | grep -q $HOME/bin; } || echo "export PATH=\$PATH:$HOME/bin" >> ~/.bash_profile
+{ echo $PATH | grep -q $HOME/bin; } || echo "export PATH=$PATH:$HOME/bin" >> ~/.bash_profile
 cp ~/.bash_profile ~/.bashrc
 
 # Install homebrew
