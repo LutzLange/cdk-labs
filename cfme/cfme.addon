@@ -28,7 +28,7 @@ oc adm policy add-scc-to-user privileged system:serviceaccount:cloudforms:defaul
 oc create -f https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/openshift_examples/files/examples/v3.6/cfme-templates/cfme-template.yaml -n cloudforms
 
 #oc config set --patch '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
-docker exec origin /usr/bin/openshift ex config patch /var/lib/origin/openshift.local.config/master/master-config.yaml -p '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
+# docker exec origin /usr/bin/openshift ex config patch /var/lib/origin/openshift.local.config/master/master-config.yaml -p '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
 
 # restart origin to read in config change
 # docker restart origin
@@ -64,4 +64,4 @@ docker exec origin /usr/bin/openshift ex config patch /var/lib/origin/openshift.
 #HTTPD_MEM_REQ                 Minimum amount of memory the httpd container will need.                                                                         512Mi
 
 # fire up CloudForms 4.5
-oc new-app --template=cloudforms -p APPLICATION_CPU_REQ=400m -p POSTGRESQL_CPU_REQ=200m -p MEMCACHED_CPU_REQ=100m -p APPLICATION_MEM_REQ=2048Mi -p POSTGRESQL_MEM_REQ=500Mi -n cloudforms 
+oc new-app --template=cloudforms -p APPLICATION_CPU_REQ=1000m -p POSTGRESQL_CPU_REQ=200m -p MEMCACHED_CPU_REQ=100m -p APPLICATION_MEM_REQ=2048Mi -p POSTGRESQL_MEM_REQ=500Mi -n cloudforms 
