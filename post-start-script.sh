@@ -4,7 +4,8 @@
 #
 
 # link oc to ~/bin
-ln ~/.minishift/cache/oc/v3.5.5.31/oc ~/bin
+OC=$(find ~/.minishift -name oc -type f)
+test -f ~/bin/oc || ln $OC ~/bin
 
 # change master-config.yaml for cfme
 cdk openshift config set --patch '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
