@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# test Lab Setup with ansible an Mac OS
+# CDK OpenShift Lab Setup on MacOS
 #  Convert to Ansible?
-#
+# 
 bold=$(tput bold)
 normal=$(tput sgr0)
 
@@ -25,8 +25,6 @@ ENDMESSAGE
 
 read -p "Do you want to proceed ? (Y/N)" ANSWER
 test "$ANSWER " != "Y " && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
-
-STEP=0
 
 # kick off install of CMDLine dev tools
 echo -e "\n${bold}1. Installing XCode Developer Toolset${normal}" 
@@ -60,7 +58,7 @@ echo -e "\n${bold}3. Create ~/bin/cdkshift and extend your PATH to include ~/bin
 test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/bin/cdkshift
 
 # extend PATH if required
-{ echo $PATH | grep -q $HOME/bin; } || echo 'export PATH=$PATH:$HOME/bin' >> ~/.bash_profile
+{ echo $PATH | grep -q $HOME/bin; } || echo "export PATH=\$PATH:$HOME/bin" >> ~/.bash_profile
 
 # Install homebrew
 echo -e "\n${bold}4. Checking / Installing homebrew${normal}"
