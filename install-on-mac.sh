@@ -59,7 +59,7 @@ test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/
 
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo "export PATH=\$PATH:$HOME/bin" >> ~/.bash_profile
-source ~/.bash_profile
+cp ~/.bash_profile ~/.bashrc
 
 # Install homebrew
 echo -e "\n${bold}4. Checking / Installing homebrew${normal}"
