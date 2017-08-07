@@ -8,7 +8,7 @@ cd ~/git/cdk-labs/
 
 cdk config set memory 12288 
 cdk config set disk-size 40g
-cdk config set image-caching true
+#cdk config set image-caching true
 
 for ADDON in $ADDONS
 do
