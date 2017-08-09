@@ -12,8 +12,8 @@ export MINISHIFT_PASSWORD="RHNPASS"
 OS=$(uname -s)
 
 case $OS in 
-	Darwin) SHELL="/usr/local/bin/bash"
-  Linux) SHELL="/bin/bash"
+	Darwin) SHELL="/usr/local/bin/bash";;
+  Linux) SHELL="/bin/bash";;
 esac
 
 $SHELL $HOME/git/cdk-labs/lab.sh "$@"
