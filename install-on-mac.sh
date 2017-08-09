@@ -102,6 +102,10 @@ sudo chmod u+s /usr/local/opt/docker-machine-driver-xhyve/bin/docker-machine-dri
 echo -e "\n${bold}9. Installing olab Script${normal}"
 test -f ~/bin/olab && echo olab already there skipping copy || cp ~/git/cdk-labs/olab ~/bin
 
+# Install bash 4
+echo -e "\n${bold}10. Install Bash 4${normal}"
+brew list bash &>/dev/null && echo "bash installed via brew already" || brew install bash
+
 # You are ready to roll now
 cat <<ENDMESSAGE
 

@@ -8,4 +8,12 @@
 export MINISHIFT_USERNAME="RHNUSER"
 export MINISHIFT_PASSWORD="RHNPASS"
 
-~/git/cdk-labs/lab.sh "$@"
+# lab.sh requireds bash 4
+OS=$(uname -s)
+
+case $OS in 
+	Darwin) SHELL="/usr/local/bin/bash"
+  Linux) SHELL="/bin/bash"
+esac
+
+$SHELL $HOME/git/cdk-labs/lab.sh "$@"
