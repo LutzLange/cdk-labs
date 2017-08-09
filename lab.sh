@@ -47,7 +47,6 @@ full_lab () {
 
 pre_start_func () {
   # replace pre_start_script
-  echo "Not implemented yet"
   cd ~/git/cdk-labs/
 
   cdk config set memory ${config["MEM"]}
@@ -61,11 +60,47 @@ pre_start_func () {
   done
 }
 
+post_startup_func () {
+ case $LAB in 
+  1)  echo "Lab 1 is set up" ;;
+	2)  oc login -u system:admin -n cloudforms
+	    while ! oc get pod cloudforms-0 -o yaml | grep -q "ready: true" ; do oc get pod cloudforms-0 | tail -1; sleep 10; done
+      echo "Lab 2 is set up" ;;
+  3)  echo "Lab 3 is set up" ;;
+  *)  echo "full lab is set up" ;;
+ esac
+}
+
 ###
+# parse startopts 
 # initialize vars
 
-# TODO use getopts
-lab_part_two
+# look for starting options
+while getopts qhl: OPTS; do
+  case $OPTS in 
+   l) LAB=$OPTARG ;;
+   q) QMODE="yes" ;;
+	 h) cat <<-EHELP
+
+			This tool let you set up the OpenShift Lab environment 
+		
+			The following Options are recognized :
+		   -q      - quiet mode ( skip warnings and chatter )
+		   -l LAB  - setup LAB nummber 1, 2 or 3 ( default is full lab = maximum resource consumption )
+			
+			EHELP
+			exit 0
+			;;
+   ?) echo "Option "$1" is not recognized, -h for help" ;;
+  esac
+done
+
+case $LAB in 
+  1) lab_part_one;;
+  2) lab_part_two;;
+	3) lab_part_three;;
+	*) full_lab;;
+esac
 
 STOP_OPT=""
 START_OPT="--ocp-tag=$OCP_VER ${config["STACKS"]}"
@@ -93,29 +128,29 @@ intro () {
 }
 
 # Skip or call the intro?
-test "$QMODE" != "-q" && { echo $QMODE; intro; }
+test "$QMODE" != "yes" && { echo $QMODE; intro; }
 
 ################################
 # This is where we do the work #
 ################################
 time { 
   # stop running TODO check before this
-  echo test "$(cdk status)" = "Running" && cdk stop $STOP_OPT
+  test "$(cdk status)" = "Running" && cdk stop $STOP_OPT
 
   # delete minishift vm
   cdk delete
 
   # empty out minishift config dir
-  test -d ~/.minishift && { 
-    test -f ~/.minishift/cdk && rm -rf ~/.minishift || { 
-      echo "existing ~/.minishift moved to ~/minishift-saved"
-      mv ~/.minishift ~/minishift-saved 
+  test -d $HOME/.minishift && { 
+    test -f $HOME/.minishift/cdk && rm -rf $HOME/.minishift || { 
+      echo "existing $HOME/.minishift moved to $HOME/minishift-saved"
+      mv $HOME/.minishift $HOME/minishift-saved 
       }
   }
 
   # run new setup ( config dir and tools )
   cdk setup-cdk
-  touch ~/.minishift/cdk
+  touch $HOME/.minishift/cdk
 
   # install addons and set vm options
   pre_start_func ${config["ADDONS"]} 
@@ -123,6 +158,6 @@ time {
   # start the new vm with all options 
   cdk start $START_OPT
 
-  # do things that are needed post start ( adjust master-config.yaml )
-  ~/git/cdk-labs/post-start-script.sh
+  # do things that are needed post start
+  post_startup_func 
 }

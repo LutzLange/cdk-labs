@@ -2,10 +2,10 @@
 #
 # quick starter
 #   1. put this into ~/bin/
-#   2. change USERNAME and PASSWORD
+#   2. decide to add -q or not aka.( quick mode will skip intro step )
 #   3. check your $PATH
 #  
 export MINISHIFT_USERNAME="RHNUSER"
 export MINISHIFT_PASSWORD="RHNPASS"
 
-~/git/cdk-labs/lab.sh
+~/git/cdk-labs/lab.sh "$@"
