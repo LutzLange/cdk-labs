@@ -61,9 +61,13 @@ pre_start_func () {
 }
 
 post_startup_func () {
+ # check that the oc command is available otherwise create a link
+ test which oc &>/dev/null && echo oc was found || ln -s $(find ~/.minishift -name oc -type f) $HOME/bin/
+
  case $LAB in 
   1)  echo "Lab 1 is set up" ;;
-	2)  oc login -u system:admin -n cloudforms
+	2)  cdk openshift config set --patch '{"imagePolicyConfig":{"maxImagesBulkImportedPerRepository": 100}}'
+			oc login -u system:admin -n cloudforms
 	    while ! oc get pod cloudforms-0 -o yaml | grep -q "ready: true" ; do oc get pod cloudforms-0 | tail -1; sleep 10; done
       echo "Lab 2 is set up" ;;
   3)  echo "Lab 3 is set up" ;;
