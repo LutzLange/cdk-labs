@@ -4,7 +4,7 @@
 
 # specify -q as parameter for quick mode and skip intro
 QMODE="$1"
-OCP_VER="v3.5"
+OCP_VER="v3.6"
 
 # declare config hashmap
 declare -A config
@@ -61,8 +61,8 @@ pre_start_func () {
 }
 
 post_startup_func () {
- # check that the oc command is available otherwise create a link
- test which oc &>/dev/null && echo oc was found || ln -s $(find ~/.minishift -name oc -type f) $HOME/bin/
+ # check that the oc command is available otherwise create a link ( done by cdk / minishift usually )
+ # test which oc &>/dev/null && echo oc was found || ln -s $(find ~/.minishift -name oc -type f) $HOME/bin/
 
  case $LAB in 
   1)  echo "Lab 1 is set up" ;;
@@ -100,18 +100,19 @@ while getopts qhl: OPTS; do
 done
 
 case $LAB in 
-  1) lab_part_one;;
-  2) lab_part_two;;
-	3) lab_part_three;;
-	*) full_lab;;
+  1) lab_part_one; echo "Starting Lab 1 Setup";;
+  2) lab_part_two; echo "Starting Lab 2 Setup";;
+	3) lab_part_three; echo "Starting Lab 3 Setup;;
+	*) full_lab; echo "Starting Full Lab Setup;;
 esac
 
 STOP_OPT=""
 START_OPT="--ocp-tag=$OCP_VER ${config["STACKS"]}"
 
 # set stop and start args
-test "${config["REG"]}" = "no" && STOP_OPT="$STOP_OPT --skip-unregistration"
-test "${config["REG"]}" = "no" && START_OPT="$START_OPT --skip-registration" 
+#   we create a registered file to track prior registration
+test "${config["REG"]}" = "no" && { test -f $HOME/.minishift/registered || STOP_OPT="$STOP_OPT --skip-unregistration"; }
+test "${config["REG"]}" = "no" && START_OPT="$START_OPT --skip-registration" || touch $HOME/.minishift/registered
 
 intro () {
 
