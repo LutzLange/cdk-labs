@@ -83,11 +83,11 @@ You will have all the necessary tools installed now.
 
 ${bold}Next steps :${normal}
 ${bold}1.${normal} Check your environment with : $ cdk version
-${bold}2.${normal} Build or reset your lab environment with : $ olab 
+${bold}2.${normal} Build or reset your lab environment with : $ olab -l1 
 
 NOTES : 
  fast internet connection to download docker images highly recommended
- 16 GB RAM recommended ( tuning required if you have less )
+ 16 GB RAM recommended for lab 2
 
 ENDMESSAGE
 

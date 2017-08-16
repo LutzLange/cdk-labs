@@ -4,7 +4,7 @@
 
 # specify -q as parameter for quick mode and skip intro
 QMODE="$1"
-OCP_VER="v3.6"
+#OCP_VER="v3.6"
 
 # declare config hashmap
 declare -A config
@@ -32,17 +32,18 @@ lab_part_three () {
   config["VMDISC"]=40G
   config["MEM"]=$[14*1024]
   config["REG"]=yes
-  config["ADDONS"]="cns"
-  config["STACKS"]=""
+  config["ADDONS"]="registry-console"
+  config["STACKS"]="--service-catalog"
 }
 
+## currently not used
 full_lab () {
   ## full setup
   config["VMDISC"]=40G
   config["MEM"]=$[16*1024]
   config["REG"]=yes
-  config["ADDONS"]="registry-console cfme cns"
-  config["STACKS"]="--metrics"
+  config["ADDONS"]="registry-console cfme"
+  config["STACKS"]="--metrics --service-catlog"
 }
 
 pre_start_func () {
@@ -70,7 +71,9 @@ post_startup_func () {
 			oc login -u system:admin -n cloudforms
 	    while ! oc get pod cloudforms-0 -o yaml | grep -q "ready: true" ; do oc get pod cloudforms-0 | tail -1; sleep 10; done
       echo "Lab 2 is set up" ;;
-  3)  echo "Lab 3 is set up" ;;
+  3)  oc login -u system:admin
+			oc adm policy add-cluster-role-to-group system:openshift:templateservicebroker-client system:unauthenticated system:authenticated
+			echo "Lab 3 is set up" ;;
   *)  echo "full lab is set up" ;;
  esac
 }
@@ -95,19 +98,20 @@ while getopts qhl: OPTS; do
 			EHELP
 			exit 0
 			;;
-   ?) echo "Option "$1" is not recognized, -h for help" ;;
+   ?) echo "Option $1 is not recognized, -h for help" ;;
   esac
 done
 
 case $LAB in 
   1) lab_part_one; echo "Starting Lab 1 Setup";;
   2) lab_part_two; echo "Starting Lab 2 Setup";;
-	3) lab_part_three; echo "Starting Lab 3 Setup;;
-	*) full_lab; echo "Starting Full Lab Setup;;
+	3) lab_part_three; echo "Starting Lab 3 Setup";;
+	*) lab_part_one; echo "Starting Lab 1 Setup";;
 esac
 
 STOP_OPT=""
-START_OPT="--ocp-tag=$OCP_VER ${config["STACKS"]}"
+#START_OPT="--ocp-tag=$OCP_VER ${config["STACKS"]}"
+START_OPT="${config["STACKS"]}"
 
 # set stop and start args
 #   we create a registered file to track prior registration
@@ -125,6 +129,7 @@ intro () {
 	This will clear out your existing ~/.minishift !
 
 	You can skip this intro by using Quick Mode with -q.
+  You can select your target Lab environment with -l [123]
 
 	EMSG
 	read -p "Are you sure to continue? (Y/N) : " ANSWER  
@@ -133,7 +138,7 @@ intro () {
 }
 
 # Skip or call the intro?
-test "$QMODE" != "yes" && { echo $QMODE; intro; }
+test "$QMODE " != "yes " && { intro; }
 
 ################################
 # This is where we do the work #
@@ -161,7 +166,7 @@ time {
   pre_start_func ${config["ADDONS"]} 
 
   # start the new vm with all options 
-  cdk start $START_OPT
+  MINISHIFT_ENABLE_EXPERIMENTAL=y cdk start $START_OPT
 
   # do things that are needed post start
   post_startup_func 
