@@ -4,6 +4,7 @@
 
 # specify -q as parameter for quick mode and skip intro
 QMODE="$1"
+CDK="$HOME/bin/cdkshift/minishift"
 #OCP_VER="v3.6"
 
 # declare config hashmap
@@ -30,8 +31,8 @@ lab_part_two () {
 lab_part_three () {
   ## Part 3
   config["VMDISC"]=40G
-  config["MEM"]=$[14*1024]
-  config["REG"]=yes
+  config["MEM"]=$[12*1024]
+  config["REG"]=no
   config["ADDONS"]="registry-console"
   config["STACKS"]="--service-catalog"
 }
@@ -83,16 +84,18 @@ post_startup_func () {
 # initialize vars
 
 # look for starting options
-while getopts qhl: OPTS; do
+while getopts dqhl: OPTS; do
   case $OPTS in 
    l) LAB=$OPTARG ;;
    q) QMODE="yes" ;;
+   d) CDK="$HOME/bin/cdkshift/minishift-devel" ;;
 	 h) cat <<-EHELP
 
 			This tool let you set up the OpenShift Lab environment 
 		
 			The following Options are recognized :
 		   -q      - quiet mode ( skip warnings and chatter )
+       -d      - use the latest available development version of cdk instead
 		   -l LAB  - setup LAB nummber 1, 2 or 3 ( default is full lab = maximum resource consumption )
 			
 			EHELP
@@ -145,10 +148,10 @@ test "$QMODE " != "yes " && { intro; }
 ################################
 time { 
   # stop running TODO check before this
-  test "$(cdk status)" = "Running" && cdk stop $STOP_OPT
+  test "$($CDK status)" = "Running" && $CDK stop $STOP_OPT
 
   # delete minishift vm
-  cdk delete
+  $CDK delete
 
   # empty out minishift config dir
   test -d $HOME/.minishift && { 
@@ -159,14 +162,14 @@ time {
   }
 
   # run new setup ( config dir and tools )
-  cdk setup-cdk
+  $CDK setup-cdk
   touch $HOME/.minishift/cdk
 
   # install addons and set vm options
   pre_start_func ${config["ADDONS"]} 
 
   # start the new vm with all options 
-  MINISHIFT_ENABLE_EXPERIMENTAL=y cdk start $START_OPT
+  MINISHIFT_ENABLE_EXPERIMENTAL=y $CDK start $START_OPT
 
   # do things that are needed post start
   post_startup_func 
