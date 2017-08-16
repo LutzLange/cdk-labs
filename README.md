@@ -4,15 +4,29 @@ OpenShift-Lab Setup
 This will set up a CDK that is ready for the OpenShift-Labs.
 This all in one OpenShift has the following additional features activated :
 
+There are currently 3 Lab Profile that can be selected with -l Option.
+
+Lab 1 :
+
+* CDK + Registry Console
+
+Lab 2 : 
+
+* CDK
 * Registry Console
+* CloudForms
 * Metric Stack
-* Lastest CloudForms 
-* (Container Navtive Storage - in planning)
+
+Lab 3 : ( only with -d and OCP 3.6 )
+
+* CDK
+* Registry-Console
+* Service Catalog
 
 Run this on MacOS as regular user :
 
-        bash <(curl -s https://raw.githubusercontent.com/LutzLange/cdk-labs/master/install-on-mac.sh)
+        $ bash <(curl -s https://raw.githubusercontent.com/LutzLange/cdk-labs/master/install-on-mac.sh)
 
-Run this on Linux ( Fedora ) :
+Run this on Linux ( Fedora ) as regular User :
 
-        bash <(curl -s https://raw.githubusercontent.com/LutzLange/cdk-labs/master/install-on-linux.sh)
+        $ bash <(curl -s https://raw.githubusercontent.com/LutzLange/cdk-labs/master/install-on-linux.sh)
