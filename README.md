@@ -4,24 +4,27 @@ OpenShift-Lab Setup
 This will set up a CDK that is ready for the OpenShift-Labs.
 This all in one OpenShift has the following additional features activated :
 
-There are currently 3 Lab Profile that can be selected with -l Option.
+There are currently 3 Lab Profiles that can be selected with -l Option.
 
 Lab 1 :
 
-* CDK + Registry Console
+* CDK 3.1.0 Release Version
+* Registry Console
 
 Lab 2 : 
 
-* CDK
+* CDK 3.1.0 Release Version
 * Registry Console
 * CloudForms
 * Metric Stack
 
-Lab 3 : ( only with -d and OCP 3.6 )
+Lab 3 : ( only with $ olab -d -l3  )
 
-* CDK
+* CDK 3.1+ Devel Build 
 * Registry-Console
 * Service Catalog
+
+------------------------------------------------------------------
 
 Run this on MacOS as regular user :
 
