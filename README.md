@@ -8,19 +8,19 @@ There are currently 3 Lab Profiles that can be selected with -l Option.
 
 Lab 1 :
 
-* CDK 3.1.0 Release Version
+* CDK 
 * Registry Console
 
 Lab 2 : 
 
-* CDK 3.1.0 Release Version
+* CDK 
 * Registry Console
 * CloudForms
 * Metric Stack
 
-Lab 3 : ( only with $ olab -d -l3  )
+Lab 3 : 
 
-* CDK 3.1+ Devel Build 
+* CDK 
 * Registry-Console
 * Service Catalog
 

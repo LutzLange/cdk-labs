@@ -95,7 +95,6 @@ while getopts dqhl: OPTS; do
 		
 			The following Options are recognized :
 		   -q      - quiet mode ( skip warnings and chatter )
-       -d      - use the latest available development version of cdk instead
 		   -l LAB  - setup LAB nummber 1, 2 or 3 ( default is full lab = maximum resource consumption )
 			
 			EHELP

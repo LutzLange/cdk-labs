@@ -61,7 +61,7 @@ wget --help &>/dev/null && echo "wget already installed" || $INSTALLCMD wget
 #
 echo -e "\n${bold}5. Getting latest CDK and CDK devel- this can be a slow download of ~400MB${normal}"
 wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift
-wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift-devel
+#wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift-devel
 test -L ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
 chmod +x ~/bin/cdk
 
