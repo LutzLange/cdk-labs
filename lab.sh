@@ -31,7 +31,7 @@ lab_part_two () {
 lab_part_three () {
   ## Part 3
   config["VMDISC"]=40G
-  config["MEM"]=$[12*1024]
+  config["MEM"]=$[8*1024]
   config["REG"]=no
   config["ADDONS"]="registry-console"
   config["STACKS"]="--service-catalog"
