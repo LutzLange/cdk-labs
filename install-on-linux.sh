@@ -69,6 +69,10 @@ chmod +x ~/bin/cdk
 echo -e "\n${bold}6. Install KVM${normal}"
 # what package to check?
 # make sure user has kvm access
+LOGOUT=0
+id | grep -q libvirt && echo $USER is in libvirt || { sudo -i gpasswd -a $USER libvirt; echo Added $USER to libvirt; }
+sudo curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm -o /usr/local/bin/docker-machine-driver-kvm
+sudo chmod +x /usr/local/bin/docker-machine-driver-kvm
 # 
 
 # Install the olab Command in ~/bin
