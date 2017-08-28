@@ -23,6 +23,7 @@ Lab 3 :
 * CDK 
 * Registry-Console
 * Service Catalog
+* Ansible Service Broker
 
 ------------------------------------------------------------------
 
@@ -33,3 +34,12 @@ Run this on MacOS as regular user :
 Run this on Linux ( Fedora ) as regular User :
 
         $ bash <(curl -s https://raw.githubusercontent.com/LutzLange/cdk-labs/master/install-on-linux.sh)
+
+
+You can setup each of the labs with :
+
+				$ olab -l X
+
+Please always use the *cdk* shorthand to get the right minishift :
+
+				$ cdk console
