@@ -38,12 +38,12 @@ Run this on Linux ( Fedora ) as regular User :
 
 You can setup each of the labs with :
 
-				$ olab -l X
+        $ olab -l X
 
 Please always use the **cdk** shorthand to get the right minishift :
 
-				$ cdk version
-				minishift v1.4.1+e65bd06
-				CDK v3.0.0-17082017-1
+        $ cdk version
+        minishift v1.4.1+e65bd06
+        CDK v3.0.0-17082017-1
 
-				$ cdk console
+        $ cdk console
