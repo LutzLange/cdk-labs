@@ -168,6 +168,7 @@ time {
   pre_start_func ${config["ADDONS"]} 
 
   # start the new vm with all options 
+  echo MINISHIFT_ENABLE_EXPERIMENTAL=y $CDK start $START_OPT
   MINISHIFT_ENABLE_EXPERIMENTAL=y $CDK start $START_OPT
 
   # do things that are needed post start
