@@ -93,7 +93,7 @@ SKIP="NO"
 test -f ~/bin/cdkshift/minishift && {
 	# check and rm Mac if not the same
 	SHANEW=$(curl http://sademo.de/mac/minishift.sha256sum 2>/dev/null | awk '{ print $1; }' )
-	SHAOLD=$(sha256sum ~/bin/cdkshift/minishift | awk '{ print $1 }' )
+	SHAOLD=$(shasum -a 256 ~/bin/cdkshift/minishift | awk '{ print $1 }' )
 	test "$SHANEW " = "$SHAOLD " && SKIP="YES" || { echo "SHA does not match remove existing minishift - removing to get new"; rm ~/bin/cdkshift/minishift; }
 }
 
