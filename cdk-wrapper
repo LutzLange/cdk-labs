@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# call minishift directly unless it is the start as an option
+#
+
+test "$1" = "start" && { echo -e "Starting CDK with : \n \$ $(cat $HOME/bin/cdk-start)"; bash $HOME/bin/cdk-start; } || { $HOME/bin/cdkshift/minishift $@; }

@@ -16,10 +16,12 @@ You are running the OpenShift CDK Lab Installer for Linux (Fedora). The followin
 1. Check / Install git 
 2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs
 3. Create ~/bin and extend your PATH to include ~/bin
-4. Check / Install wget
-5. Get the latest CDK ( currently nightly builds for cdk-3.1 ) and put it in ~/bin
-6. Check / Install kvm 
-7. Install olab command in ~/bin
+4. Create a bash alias for oc to point to the latest minishift oc
+5. Check / Install wget
+6. Get the latest CDK ( currently nightly builds for cdk-3.1 ) and put it in ~/bin
+7. Install a cdk wrapper script that allows for stop and start of labs
+8. Check / Install kvm 
+9. Install olab command in ~/bin
 
 You will need to enter your password for prviledged actions.
 
@@ -50,8 +52,12 @@ test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo 'export PATH=$PATH:$HOME/bin' >> ~/.bash_profile
 
+echo -e "\n${bold}4. Create a bash alias for oc to point to the latest minishift oc{normal}"
+# create an alias for oc to use latest minishift oc version
+grep -q 'alias oc' $HOME/.bashrc || echo 'alias oc=$HOME/.minishift/cache/oc/*/oc' >> $HOME/.bashrc
+
 # Installing wget
-echo -e "\n${bold}4. Installing wget${normal}"
+echo -e "\n${bold}5. Installing wget${normal}"
 wget --help &>/dev/null && echo "wget already installed" || $INSTALLCMD wget
 
 # Get CDK (ToDo official CDK when released) 
@@ -59,7 +65,7 @@ wget --help &>/dev/null && echo "wget already installed" || $INSTALLCMD wget
 # - only transfer if newer
 # - link to cdk to preserve existing minishift
 #
-echo -e "\n${bold}5. Getting latest CDK and CDK devel- this can be a slow download of ~400MB${normal}"
+echo -e "\n${bold}6. Getting latest CDK and CDK devel- this can be a slow download of ~400MB${normal}"
 SKIP="NO"
 test -f ~/bin/cdkshift/minishift && {
 	# check and rm Mac if not the same
@@ -69,21 +75,27 @@ test -f ~/bin/cdkshift/minishift && {
 }
 # implement SKIP?
 wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift
-test -L ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
+
+# replace link with shell wrapper script to enable start & stop of lab
+echo -e "\n${bold}7. Install CDK Wrapper${normal}"
+test -L ~/bin/cdk && rm  ~/bin/cdk
+test -f ~/bin/cdk || cp $HOME/git/cdk-labs/cdk-wrapper $HOME/bin/cdk
 chmod +x ~/bin/cdk
 
 # Install KVM 
-echo -e "\n${bold}6. Install KVM${normal}"
+echo -e "\n${bold}8. Install KVM${normal}"
 # what package to check?
 # make sure user has kvm access
 LOGOUT=0
 id | grep -q libvirt && echo $USER is in libvirt || { sudo -i gpasswd -a $USER libvirt; echo Added $USER to libvirt; }
-sudo curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm -o /usr/local/bin/docker-machine-driver-kvm
-sudo chmod +x /usr/local/bin/docker-machine-driver-kvm
+test -f /usr/local/bin/docker-machine-driver-kvm || {
+  sudo curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm -o /usr/local/bin/docker-machine-driver-kvm
+  sudo chmod +x /usr/local/bin/docker-machine-driver-kvm
+}
 # 
 
 # Install the olab Command in ~/bin
-echo -e "\n${bold}7. Installing olab Script${normal}"
+echo -e "\n${bold}9. Installing olab Script${normal}"
 test -f ~/bin/olab && echo olab already there skipping copy || cp ~/git/cdk-labs/olab ~/bin
 
 # You are ready to roll now
