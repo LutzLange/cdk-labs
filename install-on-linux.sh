@@ -2,8 +2,20 @@
 #
 # Lab Setup on Linux ( tested on Fedora )
 #
+
+# helper header out for better readability
+
 bold=$(tput bold)
 normal=$(tput sgr0)
+ACOUNT=0
+
+# helper output function for action headers
+hout () {
+  message=$1
+  ACOUNT=$[ACOUNT+1]
+  echo -e "\n${bold}${ACOUNT}. $message ${normal}"
+}
+
 # what do I need to set for 
 # Ubuntu?
 # Debian?
@@ -31,11 +43,11 @@ read -p "Do you want to proceed ? (Y/N)" ANSWER
 test "$ANSWER " != "Y " && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
 
 # kick off install of CMDLine dev tools
-echo -e "\n${bold}1. Check installing git ${normal}" 
+hout "Check and install git" 
 git --version &>/dev/null && echo git was already installed || sudo $INSTALLCMD git
 
 # Clone / update the repo
-echo -e "\n${bold}2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs${normal}"
+hout "Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
 test -d ~/git && echo "~/git is already there" || mkdir ~/git
 if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
@@ -46,18 +58,18 @@ else
 fi
 
 # Create bin folder
-echo -e "\n${bold}3. Create ~/bin/cdkshift and extend your PATH to include ~/bin${normal}"
+hout "Create ~/bin/cdkshift and extend your PATH to include ~/bin"
 test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/bin/cdkshift
 
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo 'export PATH=$PATH:$HOME/bin' >> ~/.bash_profile
 
-echo -e "\n${bold}4. Create a bash alias for oc to point to the latest minishift oc{normal}"
+hout "Create a bash alias for oc to point to the latest minishift oc"
 # create an alias for oc to use latest minishift oc version
 grep -q 'alias oc' $HOME/.bashrc || echo 'alias oc=$HOME/.minishift/cache/oc/*/oc' >> $HOME/.bashrc
 
 # Installing wget
-echo -e "\n${bold}5. Installing wget${normal}"
+hout "Installing wget"
 wget --help &>/dev/null && echo "wget already installed" || $INSTALLCMD wget
 
 # Get CDK (ToDo official CDK when released) 
@@ -65,7 +77,7 @@ wget --help &>/dev/null && echo "wget already installed" || $INSTALLCMD wget
 # - only transfer if newer
 # - link to cdk to preserve existing minishift
 #
-echo -e "\n${bold}6. Getting latest CDK and CDK devel- this can be a slow download of ~400MB${normal}"
+hout "Get CDK devel- this can be a slow download of ~400MB"
 SKIP="NO"
 test -f ~/bin/cdkshift/minishift && {
 	# check and rm Mac if not the same
@@ -73,29 +85,31 @@ test -f ~/bin/cdkshift/minishift && {
 	SHAOLD=$(sha256sum ~/bin/cdkshift/minishift | awk '{ print $1 }' )
 	test "$SHANEW " = "$SHAOLD " && SKIP="YES" || { echo "SHA does not match remove existing minishift - removing to get new"; rm ~/bin/cdkshift/minishift; }
 }
-# implement SKIP?
-wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift
+# SKIP or download CDK
+test "$SKIP" = YES && echo CDK is current || wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift
 
 # replace link with shell wrapper script to enable start & stop of lab
-echo -e "\n${bold}7. Install CDK Wrapper${normal}"
+hout "Install CDK Wrapper"
 test -L ~/bin/cdk && rm  ~/bin/cdk
 test -f ~/bin/cdk || cp $HOME/git/cdk-labs/cdk-wrapper $HOME/bin/cdk
 chmod +x ~/bin/cdk
+echo "~/bin/cdk installed as a wrapper script for ~/bin/cdkshift/minishift"
 
 # Install KVM 
-echo -e "\n${bold}8. Install KVM${normal}"
+hout "Install KVM"
 # what package to check?
 # make sure user has kvm access
 LOGOUT=0
 id | grep -q libvirt && echo $USER is in libvirt || { sudo -i gpasswd -a $USER libvirt; echo Added $USER to libvirt; }
-test -f /usr/local/bin/docker-machine-driver-kvm || {
+test -f /usr/local/bin/docker-machine-driver-kvm && echo "Nothing to do docker-machine-kvm is installed" || {
+  echo "Downloading and installing docker-machine-kvm driver requires root privs we assume sudo works on your machine. Enter your user password (twice)"
   sudo curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.7.0/docker-machine-driver-kvm -o /usr/local/bin/docker-machine-driver-kvm
   sudo chmod +x /usr/local/bin/docker-machine-driver-kvm
 }
 # 
 
 # Install the olab Command in ~/bin
-echo -e "\n${bold}9. Installing olab Script${normal}"
+hout "Installing olab Script"
 test -f ~/bin/olab && echo olab already there skipping copy || cp ~/git/cdk-labs/olab ~/bin
 
 # You are ready to roll now
