@@ -5,6 +5,14 @@
 # 
 bold=$(tput bold)
 normal=$(tput sgr0)
+ACOUNT=0
+
+# helper output function for action headers
+hout () {
+  message=$1
+  ACOUNT=$[ACOUNT+1]
+  echo -e "\n${bold}${ACOUNT}. $message ${normal}"
+}
 
 cat <<ENDMESSAGE
 You are running the OpenShift CDK Lab Installer for MacOS. The following actions will be taken :
@@ -12,12 +20,14 @@ You are running the OpenShift CDK Lab Installer for MacOS. The following actions
 1. Install XCode Developer Toolset for git usage
 2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs
 3. Create ~/bin and extend your PATH to include ~/bin
-4. Install Homebrew
-5. Check for Google Chrome && Install Homebrew Cask & Google Chrome if not found
-6. Install wget
-7. Get the latest CDK ( currently nightly builds for cdk-3.1 ) and put it in ~/bin
-8. Install docker-machine-driver-xhyve
-9. Install olab command in ~/bin
+4. Create a bash alias for oc to point to the latest minishift oc
+5. Install Homebrew
+6. Check for Google Chrome && Install Homebrew Cask & Google Chrome if not found
+7. Install wget
+8. Get the latest CDK ( currently nightly builds for cdk-3.1 ) and put it in ~/bin
+9. Install docker-machine-driver-xhyve
+10. Install olab command in ~/bin
+11. Install bash 4
 
 You will need to enter your password for prviledged actions.
 
@@ -27,7 +37,7 @@ read -p "Do you want to proceed ? (Y/N)" ANSWER
 test "$ANSWER " != "Y " && { echo "Found \"$ANSWER\" expecting \"Y\" installation averted"; exit 1 ; }
 
 # kick off install of CMDLine dev tools
-echo -e "\n${bold}1. Installing XCode Developer Toolset${normal}" 
+hout "Installing XCode Developer Toolset" 
 sudo xcode-select --install
 
 # Accept License agreement for xcode
@@ -43,7 +53,7 @@ sudo /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -license acce
 #ansible --version &>/dev/null || sudo pip install ansible
 
 # Clone / update the repo
-echo -e "\n${bold}2. Create ~/git directory and check out cdk-lab into ~/git/cdk-labs${normal}"
+hout "Create ~/git directory and check out cdk-lab into ~/git/cdk-labs"
 test -d ~/git && echo "~/git is already there" || mkdir ~/git
 if test -d ~/git/cdk-labs; then
        echo "cdk-labs is already checked out, updating cdk-labs instead"
@@ -54,19 +64,23 @@ else
 fi
 
 # Create bin folder
-echo -e "\n${bold}3. Create ~/bin/cdkshift and extend your PATH to include ~/bin${normal}"
+hout "Create ~/bin/cdkshift and extend your PATH to include ~/bin"
 test -d ~/bin/cdkshift && echo "~/bin/cdkshift was there already" || mkdir -p ~/bin/cdkshift
 
 # extend PATH if required
 { echo $PATH | grep -q $HOME/bin; } || echo "export PATH=$PATH:$HOME/bin" >> ~/.bash_profile
 cp ~/.bash_profile ~/.bashrc
 
+hout "Create a bash alias for oc to point to the latest minishift oc"
+# create an alias for oc to use latest minishift oc version
+grep -q 'alias oc' $HOME/.bashrc || echo 'alias oc=$HOME/.minishift/cache/oc/*/oc' >> $HOME/.bashrc
+
 # Install homebrew
-echo -e "\n${bold}4. Checking / Installing homebrew${normal}"
+hout "Checking / Installing homebrew"
 brew --version &>/dev/null && echo "homebrew already installed" || /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 # check for Chrome
-echo -e "\n${bold}5. Checking / Installing Google Chrome${normal}"
+hout "Checking / Installing Google Chrome"
 test -d '/Applications/Google Chrome.app' && { echo found Google Chrome skipping install; } || {
 
 	# Install homebrew cask
@@ -79,7 +93,7 @@ test -d '/Applications/Google Chrome.app' && { echo found Google Chrome skipping
 }
 
 # Installing wget
-echo -e "\n${bold}6. Installing wget${normal}"
+hout "Installing wget"
 brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 
 # Get CDK (ToDo official CDK when released) 
@@ -87,7 +101,7 @@ brew list wget &>/dev/null && echo "wget already installed" || brew install wget
 # - only transfer if newer
 # - link to cdk to preserve existing minishift
 #
-echo -e "\n${bold}7. Getting latest CDK - this can be a slow download of ~400MB${normal}"
+hout "Getting latest CDK - this can be a slow download of ~400MB"
 
 SKIP="NO"
 test -f ~/bin/cdkshift/minishift && {
@@ -97,23 +111,28 @@ test -f ~/bin/cdkshift/minishift && {
 	test "$SHANEW " = "$SHAOLD " && SKIP="YES" || { echo "SHA does not match remove existing minishift - removing to get new"; rm ~/bin/cdkshift/minishift; }
 }
 
-# implement SKIP??
-wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/mac/minishift
-test -L ~/bin/cdk || ln -s ~/bin/cdkshift/minishift ~/bin/cdk
+# SKIP or download new CDK
+test "$SKIP" = YES && echo CDK is current || wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/mac/minishift
+
+# replace link with shell wrapper script to enable start & stop of lab
+hout "Install CDK Wrapper"
+test -L ~/bin/cdk && rm  ~/bin/cdk
+test -f ~/bin/cdk || cp $HOME/git/cdk-labs/cdk-wrapper $HOME/bin/cdk
 chmod +x ~/bin/cdk
+echo "~/bin/cdk installed as a wrapper script for ~/bin/cdkshift/minishift"
 
 # Install docker-machine-driver-xhyve
-echo -e "\n${bold}8. Installing docker-machine-driver-xhyve${normal}"
+hout "Installing docker-machine-driver-xhyve"
 brew list docker-machine-driver-xhyve &>/dev/null && echo "xhyve was installed" || brew install docker-machine-driver-xhyve
 sudo chown root:wheel /usr/local/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
 sudo chmod u+s /usr/local/opt/docker-machine-driver-xhyve/bin/docker-machine-driver-xhyve
 
 # Install the olab Command in ~/bin
-echo -e "\n${bold}9. Installing olab Script${normal}"
+hout "Installing olab Script"
 test -f ~/bin/olab && echo olab already there skipping copy || cp ~/git/cdk-labs/olab ~/bin
 
 # Install bash 4
-echo -e "\n${bold}10. Install Bash 4${normal}"
+hout "Install Bash 4"
 brew list bash &>/dev/null && echo "bash installed via brew already" || brew install bash
 
 # You are ready to roll now
