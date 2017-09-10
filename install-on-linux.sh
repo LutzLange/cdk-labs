@@ -87,6 +87,7 @@ test -f ~/bin/cdkshift/minishift && {
 }
 # SKIP or download CDK
 test "$SKIP" = YES && echo CDK is current || wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift
+chmod +x ~/bin/cdkshift/minishift
 
 # replace link with shell wrapper script to enable start & stop of lab
 hout "Install CDK Wrapper"
