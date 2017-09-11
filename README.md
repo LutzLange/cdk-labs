@@ -46,4 +46,16 @@ Please always use the **cdk** shorthand to get the right minishift :
         minishift v1.4.1+e65bd06
         CDK v3.0.0-17082017-1
 
+To open your default browser to the OpenShift WebUI call :
+
         $ cdk console
+
+To update your local cdk to the latest available version do :
+
+        $ cdk update
+
+Starting and Stoping your current lab Setup is as easy as :
+
+        $ cdk stop
+
+        $ cdk start

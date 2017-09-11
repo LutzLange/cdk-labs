@@ -3,4 +3,25 @@
 # call minishift directly unless it is the start as an option
 #
 
-test "$1" = "start" && { echo -e "Starting CDK with : \n \$ $(cat $HOME/bin/cdk-start)"; bash $HOME/bin/cdk-start; } || { $HOME/bin/cdkshift/minishift $@; }
+case "$1" in 
+	start)	
+		echo -e "Starting CDK with : \n \$ $(cat $HOME/bin/cdk-start)"
+		bash $HOME/bin/cdk-start;;
+
+  update) 
+		echo -e "Updating current CDK devel with latest nightly build available"
+		test -f ~/bin/cdkshift/minishift && {
+			# check and rm Mac if not the same
+			SHANEW=$(curl http://sademo.de/linux/minishift.sha256sum 2>/dev/null | awk '{ print $1; }' )
+			SHAOLD=$(shasum -a 256 ~/bin/cdkshift/minishift | awk '{ print $1 }' )
+			test "$SHANEW " = "$SHAOLD " && SKIP="YES" || { echo "SHA does not match remove existing minishift - removing to get new"; rm ~/bin/cdkshift/minishift; }
+		}
+		# SKIP or download CDK
+		test "$SKIP" = YES && echo CDK is current || wget -r --tries=15 --continue -nH --cut-dirs=1 -P ~/bin/cdkshift http://sademo.de/linux/minishift
+		chmod +x ~/bin/cdkshift/minishift ;;
+  
+	*) 
+		$HOME/bin/cdkshift/minishift $@;;
+
+esac
+

@@ -90,21 +90,7 @@ install_ansible_service_broker () {
 	  echo "Error processing template and creating deployment"
 	  exit
 	fi
-
-	ASB_ROUTE=`oc get routes | grep ansible-service-broker | awk '{print $2}'`
-
-	cat <<-EOF | oc create -f -
-	    apiVersion: servicecatalog.k8s.io/v1alpha1
-	    kind: Broker
-	    metadata:
-	      name: ansible-service-broker
-	    spec:
-	      url: https://${ASB_ROUTE}
-	      authInfo:
-	        basicAuthSecret:
-	          namespace: ansible-service-broker
-	          name: asb-auth-secret
-	EOF
+ 
 }
 
 
@@ -215,7 +201,8 @@ time {
   pre_start_func ${config["ADDONS"]} 
 
   # start the new vm with all options 
-  echo MINISHIFT_ENABLE_EXPERIMENTAL=y $CDK start $START_OPT
+  # -- remember how to start this instance ( used later by cdk start ) 
+  echo MINISHIFT_ENABLE_EXPERIMENTAL=y $CDK start $START_OPT > $HOME/bin/cdk-start
   MINISHIFT_ENABLE_EXPERIMENTAL=y $CDK start $START_OPT
 
   # do things that are needed post start
