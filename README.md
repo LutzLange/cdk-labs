@@ -67,6 +67,7 @@ You might want to start a new shell or source ~/.bashrc to get the alias to the 
         $ source ~/.bashrc
 
         $ oc version
-					oc v3.6.173.0.5
+          oc v3.6.173.0.5
           kubernetes v1.6.1+5115d708d7
           ...
+
